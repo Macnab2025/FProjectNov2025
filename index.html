@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Financial Projections</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: 80vh;
+        }
+        
+        .inputs-panel {
+            background: #f8f9fa;
+            padding: 30px;
+            border-right: 1px solid #ddd;
+        }
+        
+        .inputs-panel h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4CAF50;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .wine-highlight {
+            background: linear-gradient(135deg, #fff3e0, #fce4ec);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #e91e63;
+        }
+        
+        .results-panel {
+            padding: 30px;
+            overflow-x: auto;
+        }
+        
+        .scenarios-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .scenarios-table th,
+        .scenarios-table td {
+            padding: 12px 8px;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .scenarios-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            position: sticky;
+            top: 0;
+        }
+        
+        .scenarios-table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .scenario-1 {
+            background: rgba(76, 175, 80, 0.1);
+        }
+        
+        .scenario-2 {
+            background: rgba(255, 152, 0, 0.1);
+        }
+        
+        .currency {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        
+        .negative {
+            color: #d32f2f;
+        }
+        
+        .positive {
+            color: #2e7d32;
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .summary-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .summary-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .inputs-panel {
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍷 Interactive Financial Projections</h1>
+            <p>Adjust parameters and see real-time updates across all scenarios</p>
+        </div>
+        
+        <div class="content">
+            <div class="inputs-panel">
+                <h3>📊 Adjustable Inputs</h3>
+                
+                <div class="input-group">
+                    <label>Total Attendance</label>
+                    <input type="number" id="totalAttendance" value="120" min="1" max="500">
+                </div>
+                
+                <div class="input-group">
+                    <label>Max Non-Masonic %</label>
+                    <input type="number" id="maxNonMasonic" value="30" min="0" max="100" step="5">
+                </div>
+                
+                <div class="input-group">
+                    <label>Complimentary Guests</label>
+                    <input type="number" id="compGuests" value="10" min="0" max="100">
+                </div>
+                
+                <div class="input-group">
+                    <label>Complimentary Masonic</label>
+                    <input type="number" id="compMasonic" value="6" min="0" max="50">
+                </div>
+                
+                <div class="input-group">
+                    <label>Complimentary Non-Masonic</label>
+                    <input type="number" id="compNonMasonic" value="4" min="0" max="50">
+                </div>
+                
+                <h3>💰 Ticket Prices</h3>
+                
+                <div class="input-group">
+                    <label>Masonic Price (Scenario 1) £</label>
+                    <input type="number" id="masonicPrice1" value="45" min="0" step="0.5">
+                </div>
+                
+                <div class="input-group">
+                    <label>Non-Masonic Price (Scenario 1) £</label>
+                    <input type="number" id="nonMasonicPrice1" value="40" min="0" step="0.5">
+                </div>
+                
+                <div class="input-group">
+                    <label>Masonic Price (Scenario 2) £</label>
+                    <input type="number" id="masonicPrice2" value="40" min="0" step="0.5">
+                </div>
+                
+                <div class="input-group">
+                    <label>Non-Masonic Price (Scenario 2) £</label>
+                    <input type="number" id="nonMasonicPrice2" value="35" min="0" step="0.5">
+                </div>
+                
+                <h3>🍽️ Costs</h3>
+                
+                <div class="input-group">
+                    <label>Meal Cost per Person £</label>
+                    <input type="number" id="mealCost" value="32" min="0" step="0.5">
+                </div>
+                
+                <div class="input-group">
+                    <label>Venue Cost £</label>
+                    <input type="number" id="venueCost" value="300" min="0" step="10">
+                </div>
+                
+                <div class="wine-highlight">
+                    <div class="input-group">
+                        <label>🍷 Wine Cost per Bottle £</label>
+                        <input type="number" id="wineCost" value="19.5" min="0" step="0.1">
+                    </div>
+                    <small><strong>Consumption:</strong> 0.5 bottles per person</small>
+                </div>
+                
+                <div class="input-group">
+                    <label>Comedian Cost £</label>
+                    <input type="number" id="comedianCost" value="350" min="0" step="10">
+                </div>
+                
+                <h3>💳 Other Income & Fees</h3>
+                
+                <div class="input-group">
+                    <label>Fish Race Income £</label>
+                    <input type="number" id="fishIncome" value="895" min="0" step="5">
+                </div>
+                
+                <div class="input-group">
+                    <label>Bottle Competition Income £</label>
+                    <input type="number" id="bottleIncome" value="140" min="0" step="5">
+                </div>
+                
+                <div class="input-group">
+                    <label>Raffle Income £</label>
+                    <input type="number" id="raffleIncome" value="820" min="0" step="5">
+                </div>
+                
+                <div class="input-group">
+                    <label>Card Fee %</label>
+                    <input type="number" id="cardFeePercent" value="1.5" min="0" max="10" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label>Card Fee Fixed £</label>
+                    <input type="number" id="cardFeeFixed" value="0.2" min="0" step="0.05">
+                </div>
+                
+                <div class="input-group">
+                    <label>Card Payment Share %</label>
+                    <input type="number" id="cardShare" value="50" min="0" max="100" step="5">
+                </div>
+            </div>
+            
+            <div class="results-panel">
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <h4>🍷 Wine Cost</h4>
+                        <div class="value" id="wineTotal">£1,170</div>
+                        <small id="bottleCount">60 bottles</small>
+                    </div>
+                    <div class="summary-card">
+                        <h4>📊 Best Scenario</h4>
+                        <div class="value" id="bestProfit">£2,212</div>
+                        <small id="bestScenario">Scenario 1, 120 people, 10%</small>
+                    </div>
+                    <div class="summary-card">
+                        <h4>💰 Revenue Range</h4>
+                        <div class="value" id="revenueRange">£5,015 - £8,085</div>
+                        <small>Min - Max Total Income</small>
+                    </div>
+                </div>
+                
+                <table class="scenarios-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Scenario</th>
+                            <th>Attendance</th>
+                            <th>Non-Masonic %</th>
+                            <th>Masonic Paying</th>
+                            <th>Non-Masonic Paying</th>
+                            <th>Ticket Revenue</th>
+                            <th>Other Income</th>
+                            <th>Total Income</th>
+                            <th>Total Costs</th>
+                            <th>Net Profit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scenariosTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get all input elements
+        const inputs = {
+            totalAttendance: document.getElementById('totalAttendance'),
+            maxNonMasonic: document.getElementById('maxNonMasonic'),
+            compGuests: document.getElementById('compGuests'),
+            compMasonic: document.getElementById('compMasonic'),
+            compNonMasonic: document.getElementById('compNonMasonic'),
+            masonicPrice1: document.getElementById('masonicPrice1'),
+            nonMasonicPrice1: document.getElementById('nonMasonicPrice1'),
+            masonicPrice2: document.getElementById('masonicPrice2'),
+            nonMasonicPrice2: document.getElementById('nonMasonicPrice2'),
+            mealCost: document.getElementById('mealCost'),
+            venueCost: document.getElementById('venueCost'),
+            wineCost: document.getElementById('wineCost'),
+            comedianCost: document.getElementById('comedianCost'),
+            fishIncome: document.getElementById('fishIncome'),
+            bottleIncome: document.getElementById('bottleIncome'),
+            raffleIncome: document.getElementById('raffleIncome'),
+            cardFeePercent: document.getElementById('cardFeePercent'),
+            cardFeeFixed: document.getElementById('cardFeeFixed'),
+            cardShare: document.getElementById('cardShare')
+        };
+
+        // Scenario definitions
+        const scenarios = [
+            {name: 'Scenario 1', attendance: 90, nonMasonicPct: 0.1, scenario: 1},
+            {name: 'Scenario 1', attendance: 90, nonMasonicPct: 0.2, scenario: 1},
+            {name: 'Scenario 1', attendance: 90, nonMasonicPct: 0.3, scenario: 1},
+            {name: 'Scenario 1', attendance: 150, nonMasonicPct: 0.1, scenario: 1},
+            {name: 'Scenario 1', attendance: 150, nonMasonicPct: 0.2, scenario: 1},
+            {name: 'Scenario 1', attendance: 150, nonMasonicPct: 0.3, scenario: 1},
+            {name: 'Scenario 1', attendance: 120, nonMasonicPct: 0.1, scenario: 1},
+            {name: 'Scenario 1', attendance: 120, nonMasonicPct: 0.2, scenario: 1},
+            {name: 'Scenario 1', attendance: 120, nonMasonicPct: 0.3, scenario: 1},
+            {name: 'Scenario 2', attendance: 90, nonMasonicPct: 0.1, scenario: 2},
+            {name: 'Scenario 2', attendance: 90, nonMasonicPct: 0.2, scenario: 2},
+            {name: 'Scenario 2', attendance: 90, nonMasonicPct: 0.3, scenario: 2},
+            {name: 'Scenario 2', attendance: 150, nonMasonicPct: 0.1, scenario: 2},
+            {name: 'Scenario 2', attendance: 150, nonMasonicPct: 0.2, scenario: 2},
+            {name: 'Scenario 2', attendance: 150, nonMasonicPct: 0.3, scenario: 2},
+            {name: 'Scenario 2', attendance: 120, nonMasonicPct: 0.1, scenario: 2},
+            {name: 'Scenario 2', attendance: 120, nonMasonicPct: 0.2, scenario: 2},
+            {name: 'Scenario 2', attendance: 120, nonMasonicPct: 0.3, scenario: 2}
+        ];
+
+        function calculateScenario(scenario) {
+            const values = {};
+            Object.keys(inputs).forEach(key => {
+                values[key] = parseFloat(inputs[key].value) || 0;
+            });
+
+            // Convert percentages
+            const maxNonMasonicDecimal = values.maxNonMasonic / 100;
+            const cardFeePercentDecimal = values.cardFeePercent / 100;
+            const cardShareDecimal = values.cardShare / 100;
+
+            // Calculate attendees
+            const masonicPaying = Math.max(0, 
+                scenario.attendance - values.compGuests - values.compMasonic - 
+                Math.round(scenario.attendance * scenario.nonMasonicPct * (1 - maxNonMasonicDecimal))
+            );
+            
+            const nonMasonicPaying = Math.max(0, 
+                Math.round(scenario.attendance * scenario.nonMasonicPct) - values.compNonMasonic
+            );
+
+            // Calculate revenue
+            const ticketRevenue = scenario.scenario === 1 ? 
+                (masonicPaying * values.masonicPrice1) + (nonMasonicPaying * values.nonMasonicPrice1) :
+                (masonicPaying * values.masonicPrice2) + (nonMasonicPaying * values.nonMasonicPrice2);
+
+            const otherIncome = values.fishIncome + values.bottleIncome + values.raffleIncome;
+            const totalIncome = ticketRevenue + otherIncome;
+
+            // Calculate costs INCLUDING WINE
+            const mealCosts = scenario.attendance * values.mealCost;
+            const wineCosts = scenario.attendance * 0.5 * values.wineCost; // 0.5 bottles per person
+            const fixedCosts = values.venueCost + values.comedianCost;
+            const cardFees = (ticketRevenue * cardFeePercentDecimal * cardShareDecimal) + 
+                           ((masonicPaying + nonMasonicPaying) * values.cardFeeFixed * cardShareDecimal);
+            
+            const totalCosts = mealCosts + wineCosts + fixedCosts + cardFees;
+            const netProfit = totalIncome - totalCosts;
+
+            return {
+                masonicPaying,
+                nonMasonicPaying,
+                ticketRevenue,
+                otherIncome,
+                totalIncome,
+                totalCosts,
+                netProfit,
+                wineCosts
+            };
+        }
+
+        function updateDisplay() {
+            const tableBody = document.getElementById('scenariosTableBody');
+            tableBody.innerHTML = '';
+            
+            let bestProfit = -Infinity;
+            let bestScenarioText = '';
+            let minIncome = Infinity;
+            let maxIncome = -Infinity;
+
+            // Calculate wine cost for current attendance
+            const currentAttendance = parseFloat(inputs.totalAttendance.value) || 120;
+            const currentWineCost = parseFloat(inputs.wineCost.value) || 19.5;
+            const bottles = currentAttendance * 0.5;
+            const totalWineCost = bottles * currentWineCost;
+            
+            document.getElementById('wineTotal').textContent = `£${totalWineCost.toLocaleString()}`;
+            document.getElementById('bottleCount').textContent = `${bottles} bottles`;
+
+            scenarios.forEach(scenario => {
+                const calc = calculateScenario(scenario);
+                
+                // Track best scenario and income range
+                if (calc.netProfit > bestProfit) {
+                    bestProfit = calc.netProfit;
+                    bestScenarioText = `${scenario.name}, ${scenario.attendance} people, ${Math.round(scenario.nonMasonicPct * 100)}%`;
+                }
+                if (calc.totalIncome < minIncome) minIncome = calc.totalIncome;
+                if (calc.totalIncome > maxIncome) maxIncome = calc.totalIncome;
+
+                // Create table row
+                const row = document.createElement('tr');
+                row.className = scenario.scenario === 1 ? 'scenario-1' : 'scenario-2';
+                
+                row.innerHTML = `
+                    <td style="text-align: left;">${scenario.name}</td>
+                    <td>${scenario.attendance}</td>
+                    <td>${Math.round(scenario.nonMasonicPct * 100)}%</td>
+                    <td>${calc.masonicPaying}</td>
+                    <td>${calc.nonMasonicPaying}</td>
+                    <td class="currency">£${Math.round(calc.ticketRevenue).toLocaleString()}</td>
+                    <td class="currency">£${Math.round(calc.otherIncome).toLocaleString()}</td>
+                    <td class="currency">£${Math.round(calc.totalIncome).toLocaleString()}</td>
+                    <td class="currency">£${Math.round(calc.totalCosts).toLocaleString()}</td>
+                    <td class="currency ${calc.netProfit >= 0 ? 'positive' : 'negative'}">£${Math.round(calc.netProfit).toLocaleString()}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+
+            // Update summary cards
+            document.getElementById('bestProfit').textContent = `£${Math.round(bestProfit).toLocaleString()}`;
+            document.getElementById('bestScenario').textContent = bestScenarioText;
+            document.getElementById('revenueRange').textContent = `£${Math.round(minIncome).toLocaleString()} - £${Math.round(maxIncome).toLocaleString()}`;
+        }
+
+        // Add event listeners to all inputs
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('input', updateDisplay);
+        });
+
+        // Initial calculation
+        updateDisplay();
+    </script>
+</body>
+</html>
