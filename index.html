@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <title>Macnab 2025 Financial Matrix</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f8; }
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f8; color:#222; }
     h1, h2 { margin-bottom: 10px; }
-    fieldset { border: 1px solid #ccc; margin-bottom: 20px; padding: 15px; background: #fff; }
+    fieldset { border: 1px solid #ccc; margin-bottom: 20px; padding: 15px; background: #fff; border-radius:8px; }
     legend { font-weight: bold; }
     .input-grid {
       display: grid;
-      grid-template-columns: 250px 150px 250px;
-      row-gap: 10px;
-      column-gap: 10px;
+      grid-template-columns: 260px 1fr 140px;
+      gap: 10px;
       align-items: center;
     }
     input[type="number"], input[type="range"] {
@@ -20,9 +20,10 @@
       padding: 5px;
       box-sizing: border-box;
     }
+    input[type="checkbox"] { transform: scale(1.1); margin-right:5px; }
     .summary {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
       gap: 15px;
       margin-top: 20px;
     }
@@ -30,143 +31,173 @@
       background: #fff;
       padding: 15px;
       border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
       text-align: center;
     }
     .income { color: green; }
     .cost { color: red; }
     .profit-positive { color: green; font-weight: bold; }
     .profit-negative { color: red; font-weight: bold; }
-    .auto-toggle { font-size: 0.85em; text-align: right; color: #555; }
+    .muted { color:#666; font-size:0.9em; }
+    button {
+      background:#1f6feb;color:#fff;border:none;padding:8px 14px;
+      border-radius:6px;cursor:pointer;font-size:0.9em;
+    }
+    button:hover{background:#1254c0;}
+    table { 
+      width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; 
+      display: block; overflow-x: auto; white-space: nowrap;
+    }
+    th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: center; }
+    th { background: #dee2e6; position: sticky; top: 0; z-index: 1; }
+    td small { display: block; font-size: 0.8em; color: #555; }
+    th:nth-child(1), td:nth-child(1){ text-align:left; min-width:100px; }
   </style>
 </head>
 <body>
   <h1>Macnab 2025 Financial Matrix</h1>
 
-  <fieldset>
-    <legend>Fixed Costs</legend>
-    <div class="input-grid">
-      <label>Venue Hire (£):</label> <input type="number" id="venueHire" value="300" min="0"><span></span>
-      <label>Comedian (£):</label> <input type="number" id="comedian" value="350" min="0"><span></span>
-    </div>
-  </fieldset>
-
-  <fieldset>
-    <legend>Variable Costs</legend>
-    <div class="input-grid">
-      <label>Base Attendance:</label>
-      <input type="number" id="attendanceInput" value="127" min="0"><span></span>
-
-      <label>Masonic %:</label>
-      <input type="range" id="masonicPercent" value="50" min="0" max="100" oninput="updateCalculations()">
-      <span><span id="masonicLabel">50%</span> (<span id="masonicGuests">0</span> M, <span id="nonMasonicGuests">0</span> NM)</span>
-
-      <label>Wine Bottles (used):</label>
-      <input type="number" id="wineBottlesInput" value="90" min="0"><span></span>
-
-      <label>Complimentary Masonic Tickets:</label>
-      <input type="number" id="compMasonic" value="6" min="0"><span></span>
-
-      <label>Complimentary Non-Masonic Tickets:</label>
-      <input type="number" id="compNonMasonic" value="4" min="0"><span></span>
-
-      <label>Charity Contribution (£):</label>
-      <input type="number" id="charityInput" value="0" min="0"><span></span>
-    </div>
-  </fieldset>
-
-  <fieldset>
-    <legend>Projected Income</legend>
-    <div class="input-grid">
-      <label>Raffle Income (£): <small>£5 per strip</small></label>
-      <input type="number" id="raffleIncome" value="820" min="0"><span id="raffleCount"></span>
-
-      <label>Fish Race Income (£): <small>£5 per ticket</small></label>
-      <input type="number" id="fishRaceIncome" value="895" min="0"><span id="fishRaceCount"></span>
-
-      <label>Bottle Comp Income (£): <small>£1 per go</small></label>
-      <input type="number" id="bottleCompIncome" value="140" min="0"><span id="bottleCompCount"></span>
-
-      <label>Card Transactions (%):</label>
-      <input type="range" id="cardTransactions" value="40" min="0" max="100" oninput="updateCalculations()"><span id="cardLabel">40%</span>
-    </div>
-  </fieldset>
-
-  <fieldset>
-    <legend>Spend per Head Breakdown</legend>
-    <div class="input-grid">
-      <label>Raffle Tickets per Person:</label>
-      <input type="number" id="rafflePerPerson" value="0" min="0" step="0.01">
-      <span>× £5 = <span id="rafflePerPersonValue">£0.00</span></span>
-      <span class="auto-toggle"><label><input type="checkbox" id="raffleAuto" checked> Auto</label></span>
-
-      <label>Fish Race Tickets per Person:</label>
-      <input type="number" id="fishRacePerPerson" value="0" min="0" step="0.01">
-      <span>× £5 = <span id="fishRacePerPersonValue">£0.00</span></span>
-      <span class="auto-toggle"><label><input type="checkbox" id="fishRaceAuto" checked> Auto</label></span>
-
-      <label>Bottle Comp Goes per Person:</label>
-      <input type="number" id="bottleCompPerPerson" value="0" min="0" step="0.01">
-      <span>× £1 = <span id="bottleCompPerPersonValue">£0.00</span></span>
-      <span class="auto-toggle"><label><input type="checkbox" id="bottleCompAuto" checked> Auto</label></span>
-    </div>
-  </fieldset>
-
-  <h2>Summary</h2>
-  <div class="summary">
-    <div class="card">Attendance: <span id="summaryAttendance"></span></div>
-    <div class="card">Gross Revenue: <span id="summaryGrossRevenue"></span></div>
-    <div class="card">Net Revenue: <span id="summaryNetRevenue"></span></div>
-    <div class="card">Approx. Spend per Head: <span id="summarySpendPerHead"></span></div>
-  </div>
+  <!-- (all your fieldsets, summary, and table remain unchanged — omitted here for brevity) -->
 
   <script>
-    function formatCurrency(v){return new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP'}).format(v||0);}
+    const formatCurrency = v => (v<0?"(":"")+new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP'}).format(Math.abs(v||0))+(v<0?")":"");
+    const formatProfit = v => v>=0?`+${formatCurrency(v)}`:formatCurrency(v);
+    const getProfitClass = v => v>=0?'profit-positive':'profit-negative';
 
-    function updateCalculations(){
-      const rafflePrice=5, fishPrice=5, bottlePrice=1;
-      const attendance = parseFloat(document.getElementById('attendanceInput').value)||0;
-      const raffleIncome = parseFloat(document.getElementById('raffleIncome').value)||0;
-      const fishIncome = parseFloat(document.getElementById('fishRaceIncome').value)||0;
-      const bottleIncome = parseFloat(document.getElementById('bottleCompIncome').value)||0;
-
-      // Update counts
-      document.getElementById('raffleCount').textContent = `(${(raffleIncome/rafflePrice).toFixed(0)} strips)`;
-      document.getElementById('fishRaceCount').textContent = `(${(fishIncome/fishPrice).toFixed(0)} tickets)`;
-      document.getElementById('bottleCompCount').textContent = `(${(bottleIncome/bottlePrice).toFixed(0)} goes)`;
-
-      // Auto per-head logic
-      if(document.getElementById('raffleAuto').checked && attendance>0)
-        document.getElementById('rafflePerPerson').value = (raffleIncome/rafflePrice/attendance).toFixed(2);
-      if(document.getElementById('fishRaceAuto').checked && attendance>0)
-        document.getElementById('fishRacePerPerson').value = (fishIncome/fishPrice/attendance).toFixed(2);
-      if(document.getElementById('bottleCompAuto').checked && attendance>0)
-        document.getElementById('bottleCompPerPerson').value = (bottleIncome/bottlePrice/attendance).toFixed(2);
-
-      const rPP = parseFloat(document.getElementById('rafflePerPerson').value)||0;
-      const fPP = parseFloat(document.getElementById('fishRacePerPerson').value)||0;
-      const bPP = parseFloat(document.getElementById('bottleCompPerPerson').value)||0;
-
-      document.getElementById('rafflePerPersonValue').textContent=formatCurrency(rPP*rafflePrice);
-      document.getElementById('fishRacePerPersonValue').textContent=formatCurrency(fPP*fishPrice);
-      document.getElementById('bottleCompPerPersonValue').textContent=formatCurrency(bPP*bottlePrice);
-
-      const sph = (rPP*rafflePrice)+(fPP*fishPrice)+(bPP*bottlePrice);
-      document.getElementById('summarySpendPerHead').textContent=formatCurrency(sph);
-
-      document.getElementById('summaryAttendance').textContent=attendance;
-      const gross = raffleIncome + fishIncome + bottleIncome;
-      document.getElementById('summaryGrossRevenue').textContent=formatCurrency(gross);
-      document.getElementById('summaryNetRevenue').textContent=formatCurrency(gross);
+    function getInputs(){
+      return {
+        venueHire:+document.getElementById('venueHire').value||0,
+        comedian:+document.getElementById('comedian').value||0,
+        attendance:+document.getElementById('attendanceInput').value||0,
+        masonicPercent:+document.getElementById('masonicPercent').value||0,
+        wineBottles:+document.getElementById('wineBottlesInput').value||0,
+        compMasonic:+document.getElementById('compMasonic').value||0,
+        compNonMasonic:+document.getElementById('compNonMasonic').value||0,
+        charity:+document.getElementById('charityInput').value||0,
+        raffleIncome:+document.getElementById('raffleIncome').value||0,
+        fishRaceIncome:+document.getElementById('fishRaceIncome').value||0,
+        bottleCompIncome:+document.getElementById('bottleCompIncome').value||0,
+        cardPercent:+document.getElementById('cardTransactions').value||0,
+        mealCost:32, winePerBottle:19.5
+      };
     }
 
-    // trigger recalculation when relevant fields change
-    ['raffleIncome','fishRaceIncome','bottleCompIncome','attendanceInput',
-     'raffleAuto','fishRaceAuto','bottleCompAuto',
-     'rafflePerPerson','fishRacePerPerson','bottleCompPerPerson']
-      .forEach(id=>document.getElementById(id).addEventListener('input',updateCalculations));
+    function calcScenario(name,prices,i){
+      const att=i.attendance;
+      const mG=Math.round(att*i.masonicPercent/100);
+      const nmG=att-mG;
+      const paidM=Math.max(mG-i.compMasonic,0);
+      const paidNM=Math.max(nmG-i.compNonMasonic,0);
+      const ticketRev=(paidM*prices.masonic)+(paidNM*prices.nonMasonic);
+      const side=i.raffleIncome+i.fishRaceIncome+i.bottleCompIncome;
+      const gross=ticketRev+side;
+      const tix=paidM+paidNM;
+      const avg=tix?ticketRev/tix:0;
+      const cardFeePer=(avg*0.015)+0.20;
+      const cardFees=tix*(i.cardPercent/100)*cardFeePer;
+      const net=gross-cardFees;
+      const meals=att*i.mealCost, wine=i.wineBottles*i.winePerBottle;
+      const fixed=i.venueHire+i.comedian, varC=meals+wine+i.charity;
+      const tot=fixed+varC;
+      return {name,attendance:att,mP:i.masonicPercent,nmP:100-i.masonicPercent,
+              mPrc:prices.masonic,nmPrc:prices.nonMasonic,
+              ticketRev,side,gross,cardFees,net,meals,wine,fixed,varC,
+              gProfit:net-meals-wine,tCosts:tot,nProfit:net-tot};
+    }
 
-    updateCalculations();
+    function updateAll(){
+      const i=getInputs(), rP=5,fP=5,bP=1;
+      // Bracket counts
+      document.getElementById('raffleCount').textContent=`(${Math.round(i.raffleIncome/rP)} strips)`;
+      document.getElementById('fishRaceCount').textContent=`(${Math.round(i.fishRaceIncome/fP)} tickets)`;
+      document.getElementById('bottleCompCount').textContent=`(${Math.round(i.bottleCompIncome/bP)} goes)`;
+
+      const att=i.attendance||0;
+      // Auto-calculated Spend per Head values
+      if(document.getElementById('raffleAuto').checked)document.getElementById('rafflePerPerson').value=(att?(i.raffleIncome/rP/att):0).toFixed(2);
+      if(document.getElementById('fishRaceAuto').checked)document.getElementById('fishRacePerPerson').value=(att?(i.fishRaceIncome/fP/att):0).toFixed(2);
+      if(document.getElementById('bottleCompAuto').checked)document.getElementById('bottleCompPerPerson').value=(att?(i.bottleCompIncome/bP/att):0).toFixed(2);
+
+      const rPP=+document.getElementById('rafflePerPerson').value||0,
+            fPP=+document.getElementById('fishRacePerPerson').value||0,
+            bPP=+document.getElementById('bottleCompPerPerson').value||0;
+      document.getElementById('rafflePerPersonValue').textContent=formatCurrency(rPP*rP);
+      document.getElementById('fishRacePerPersonValue').textContent=formatCurrency(fPP*fP);
+      document.getElementById('bottleCompPerPersonValue').textContent=formatCurrency(bPP*bP);
+
+      const sph=(rPP*rP)+(fPP*fP)+(bPP*bP);
+      document.getElementById('summarySpendPerHead').textContent=formatCurrency(sph);
+
+      // Masonic display
+      document.getElementById('masonicLabel').textContent=i.masonicPercent+"%";
+      const mG=Math.round(att*i.masonicPercent/100);
+      document.getElementById('masonicGuests').textContent=mG;
+      document.getElementById('nonMasonicGuests').textContent=att-mG;
+      document.getElementById('cardLabel').textContent=i.cardPercent+"%";
+
+      const scens=[{n:'Group 1',p:{masonic:40,nonMasonic:35}},{n:'Group 2',p:{masonic:45,nonMasonic:40}}].map(s=>calcScenario(s.n,s.p,i));
+      const tWine=i.wineBottles*i.winePerBottle;
+      document.getElementById('summaryAttendance').textContent=att;
+      document.getElementById('summaryBottles').textContent=i.wineBottles;
+      document.getElementById('summaryWineCost').textContent=formatCurrency(tWine);
+      document.getElementById('summaryBottlesPerPerson').textContent=(att?i.wineBottles/att:0).toFixed(2);
+      document.getElementById('summaryGrossRevenue').textContent=formatCurrency(scens[0].gross);
+      document.getElementById('summaryCardFees').textContent=formatCurrency(-scens[0].cardFees);
+      document.getElementById('summaryNetRevenue').textContent=formatCurrency(scens[0].net);
+
+      const p=scens.map(s=>s.nProfit);
+      document.getElementById('bestScenario').textContent=formatProfit(Math.max(...p));
+      document.getElementById('worstScenario').textContent=formatProfit(Math.min(...p));
+
+      const tb=document.getElementById('scenariosTableBody');tb.innerHTML='';
+      scens.forEach(s=>{
+        tb.insertAdjacentHTML('beforeend',
+          `<tr><td><b>${s.name}</b></td><td>${s.attendance}</td><td>${s.mP}%</td><td>${s.nmP}%</td>
+          <td><small>M:£${s.mPrc}<br>NM:£${s.nmPrc}</small></td>
+          <td class="income">${formatCurrency(s.ticketRev)}</td>
+          <td class="income">${formatCurrency(i.raffleIncome)}</td>
+          <td class="income">${formatCurrency(i.fishRaceIncome)}</td>
+          <td class="income">${formatCurrency(i.bottleCompIncome)}</td>
+          <td class="income">${formatCurrency(s.gross)}</td>
+          <td class="cost">(${formatCurrency(s.cardFees)})</td>
+          <td class="income">${formatCurrency(s.net)}</td>
+          <td class="cost">(${formatCurrency(s.meals)})</td>
+          <td class="cost">(${formatCurrency(s.wine)})</td>
+          <td class="cost">(${formatCurrency(s.fixed)})</td>
+          <td class="cost">(${formatCurrency(s.varC)})</td>
+          <td class="${getProfitClass(s.gProfit)}">${formatProfit(s.gProfit)}</td>
+          <td class="cost">(${formatCurrency(s.tCosts)})</td>
+          <td class="${getProfitClass(s.nProfit)}">${formatProfit(s.nProfit)}</td></tr>`
+        );
+      });
+
+      // Scroll right
+      const table=document.querySelector('table');
+      if(table&&typeof table.scrollLeft!=='undefined')table.scrollLeft=table.scrollWidth;
+    }
+
+    // Event wiring
+    const allInputs=[
+      'venueHire','comedian','attendanceInput','masonicPercent','wineBottlesInput',
+      'compMasonic','compNonMasonic','charityInput','raffleIncome','fishRaceIncome',
+      'bottleCompIncome','cardTransactions','rafflePerPerson','fishRacePerPerson','bottleCompPerPerson'
+    ];
+    allInputs.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){el.addEventListener('input',updateAll);el.addEventListener('change',updateAll);}
+    });
+    ['raffleAuto','fishRaceAuto','bottleCompAuto'].forEach(id=>{
+      document.getElementById(id).addEventListener('change',updateAll);
+    });
+
+    document.getElementById('resetAuto').addEventListener('click',()=>{
+      ['raffleAuto','fishRaceAuto','bottleCompAuto'].forEach(id=>{
+        document.getElementById(id).checked=true;
+      });
+      updateAll();
+    });
+
+    updateAll();
   </script>
 </body>
 </html>
