@@ -365,13 +365,17 @@
       return withAvg[0];
     }
 
-    function buildDivisorTable(total, attendance) {
+    function buildDivisorTable(total, attendance, maxRows = null) {
       const divisors = getDivisors(total, attendance);
       if (divisors.length === 0) return '<tr><td colspan="2" class="note">No valid splits</td></tr>';
       
       let html = '<tr><th>Buyers</th><th>Avg/person</th></tr>';
-      divisors.reverse().forEach(d => {
-        const avg = (total / d).toFixed(2);
+      divisors.reverse();
+      
+      const rowsToShow = maxRows ? divisors.slice(0, maxRows) : divisors;
+      
+      rowsToShow.forEach(d => {
+        const avg = Math.round(total / d);
         html += `<tr><td>${d}</td><td>${avg}</td></tr>`;
       });
       return html;
@@ -595,8 +599,8 @@
         ? buildDivisorTable(raffleBest.newTotal, attendance)
         : buildDivisorTable(raffleStrips, attendance);
       document.getElementById('fishTable').innerHTML = fishBest && fishBest.adjusted
-        ? buildDivisorTable(fishBest.newTotal, attendance)
-        : buildDivisorTable(fishTickets, attendance);
+        ? buildDivisorTable(fishBest.newTotal, attendance, 5)
+        : buildDivisorTable(fishTickets, attendance, 5);
       document.getElementById('bottleTable').innerHTML = bottleBestCalc && bottleBestCalc.adjusted
         ? buildDivisorTable(bottleBestCalc.newTotal, attendance)
         : buildDivisorTable(bottleSets, attendance);
