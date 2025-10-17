@@ -5,59 +5,216 @@
   <title>Macnab 2025 Financial Matrix</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
+    :root{
+      --card-bg: #fff;
+      --muted: #666;
+      --shadow: 0 2px 5px rgba(0,0,0,0.08);
+    }
     body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f8; color:#222; }
     h1, h2 { margin-bottom: 10px; }
-    fieldset { border: 1px solid #ccc; margin-bottom: 20px; padding: 15px; background: #fff; border-radius:8px; }
+    fieldset { border: 1px solid #ccc; margin-bottom: 20px; padding: 15px; background: var(--card-bg); border-radius:8px;}
     legend { font-weight: bold; }
     .input-grid {
       display: grid;
-      grid-template-columns: 260px 1fr 140px;
+      grid-template-columns: 260px 1fr 160px;
       gap: 10px;
       align-items: center;
     }
-    input[type="number"], input[type="range"] {
+    input[type="number"], input[type="range"], select {
       width: 100%;
-      padding: 5px;
+      padding: 6px 8px;
       box-sizing: border-box;
+      font-size: 1rem;
     }
-    input[type="checkbox"] { transform: scale(1.1); margin-right:5px; }
+    input[type="checkbox"] { transform: scale(1.05); margin-right:8px; vertical-align:middle; }
+    .muted { color:var(--muted); font-size:0.92rem; }
     .summary {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 15px;
       margin-top: 20px;
     }
     .card {
-      background: #fff;
-      padding: 15px;
+      background: var(--card-bg);
+      padding: 14px;
       border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+      box-shadow: var(--shadow);
       text-align: center;
     }
+    .card small { display:block; color:var(--muted); margin-top:6px; }
     .income { color: green; }
     .cost { color: red; }
     .profit-positive { color: green; font-weight: bold; }
     .profit-negative { color: red; font-weight: bold; }
-    .muted { color:#666; font-size:0.9em; }
-    button {
-      background:#1f6feb;color:#fff;border:none;padding:8px 14px;
-      border-radius:6px;cursor:pointer;font-size:0.9em;
-    }
-    button:hover{background:#1254c0;}
     table { 
-      width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; 
+      width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--card-bg);
       display: block; overflow-x: auto; white-space: nowrap;
+      box-shadow: var(--shadow);
     }
-    th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: center; }
+    th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: center; font-size:0.95rem; }
     th { background: #dee2e6; position: sticky; top: 0; z-index: 1; }
-    td small { display: block; font-size: 0.8em; color: #555; }
-    th:nth-child(1), td:nth-child(1){ text-align:left; min-width:100px; }
+    td small { display: block; font-size: 0.82em; color: var(--muted); }
+    th:nth-child(1), td:nth-child(1){ text-align:left; min-width:120px; }
+    .spend-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr 160px;
+      gap: 10px;
+      align-items: center;
+    }
+    .spend-input-wrap { display:flex; gap:12px; align-items:center; justify-content:flex-start; }
+    .spend-input-wrap strong { margin-left:6px; min-width:90px; display:inline-block; text-align:left; }
+    .spend-auto { text-align:right; color:var(--muted); }
+    @media (max-width: 900px){
+      .summary { grid-template-columns: repeat(2, 1fr); }
+      .input-grid, .spend-grid { grid-template-columns: 1fr; }
+      .spend-auto { text-align:left; margin-top:6px; }
+    }
+    button {
+      background:#1f6feb;color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:0.95rem;
+    }
+    button:hover{ background:#1254c0; }
   </style>
 </head>
 <body>
   <h1>Macnab 2025 Financial Matrix</h1>
 
-  <!-- (all your fieldsets, summary, and table remain unchanged — omitted here for brevity) -->
+  <!-- Fixed Costs -->
+  <fieldset>
+    <legend>Fixed Costs</legend>
+    <div class="input-grid">
+      <label>Venue Hire (£):</label>
+      <input type="number" id="venueHire" value="300" min="0" step="0.01">
+      <span></span>
+
+      <label>Comedian (£):</label>
+      <input type="number" id="comedian" value="350" min="0" step="0.01">
+      <span></span>
+    </div>
+  </fieldset>
+
+  <!-- Variable Costs -->
+  <fieldset>
+    <legend>Variable Costs</legend>
+    <div class="input-grid">
+      <label>Base Attendance:</label>
+      <input type="number" id="attendanceInput" value="127" min="0" step="1">
+      <span></span>
+
+      <label>Masonic %:</label>
+      <input type="range" id="masonicPercent" value="50" min="0" max="100">
+      <span><span id="masonicLabel">50%</span> (<span id="masonicGuests">0</span> M, <span id="nonMasonicGuests">0</span> NM)</span>
+
+      <label>Wine Bottles (used):</label>
+      <input type="number" id="wineBottlesInput" value="65" min="0" step="1">
+      <span></span>
+
+      <label>Complimentary Masonic Tickets:</label>
+      <input type="number" id="compMasonic" value="6" min="0" step="1">
+      <span></span>
+
+      <label>Complimentary Non-Masonic Tickets:</label>
+      <input type="number" id="compNonMasonic" value="4" min="0" step="1">
+      <span></span>
+
+      <label>Charity Contribution (£):</label>
+      <input type="number" id="charityInput" value="0" min="0" step="0.01">
+      <span></span>
+    </div>
+  </fieldset>
+
+  <!-- Projected Income -->
+  <fieldset>
+    <legend>Projected Income</legend>
+    <div class="input-grid">
+      <label>Raffle Income (£): <small class="muted">£5 per strip</small></label>
+      <input type="number" id="raffleIncome" value="820" min="0" step="0.01">
+      <span id="raffleCount" class="muted"></span>
+
+      <label>Fish Race Income (£): <small class="muted">£5 per ticket</small></label>
+      <input type="number" id="fishRaceIncome" value="895" min="0" step="0.01">
+      <span id="fishRaceCount" class="muted"></span>
+
+      <label>Bottle Comp Income (£): <small class="muted">£1 per go</small></label>
+      <input type="number" id="bottleCompIncome" value="140" min="0" step="0.01">
+      <span id="bottleCompCount" class="muted"></span>
+
+      <label>Card Transactions (%):</label>
+      <input type="range" id="cardTransactions" value="40" min="0" max="100">
+      <span id="cardLabel">40%</span>
+    </div>
+  </fieldset>
+
+  <!-- Spend per Head -->
+  <fieldset>
+    <legend>Spend per Head Breakdown</legend>
+    <div class="spend-grid">
+      <label>Raffle Strips per Person:</label>
+      <div class="spend-input-wrap">
+        <input type="number" id="rafflePerPerson" value="1.00" min="0" step="0.01">
+        <strong id="rafflePerPersonValue">× £5 = £5.00</strong>
+      </div>
+      <div class="spend-auto">
+        <label title="If checked, this field updates automatically from Raffle Income ÷ £5 ÷ Attendance.">
+          <input type="checkbox" id="raffleAuto" checked> Auto
+        </label>
+      </div>
+
+      <label>Fish Race Tickets per Person:</label>
+      <div class="spend-input-wrap">
+        <input type="number" id="fishRacePerPerson" value="1.00" min="0" step="0.01">
+        <strong id="fishRacePerPersonValue">× £5 = £5.00</strong>
+      </div>
+      <div class="spend-auto">
+        <label title="If checked, this field updates automatically from Fish Race Income ÷ £5 ÷ Attendance.">
+          <input type="checkbox" id="fishRaceAuto" checked> Auto
+        </label>
+      </div>
+
+      <label>Bottle Comp Goes per Person:</label>
+      <div class="spend-input-wrap">
+        <input type="number" id="bottleCompPerPerson" value="5.00" min="0" step="0.01">
+        <strong id="bottleCompPerPersonValue">× £1 = £5.00</strong>
+      </div>
+      <div class="spend-auto">
+        <label title="If checked, this field updates automatically from Bottle Comp Income ÷ £1 ÷ Attendance.">
+          <input type="checkbox" id="bottleCompAuto" checked> Auto
+        </label>
+      </div>
+
+      <div style="grid-column:1/-1;text-align:right;margin-top:8px;">
+        <button id="resetAuto">Reset All to Auto</button>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Summary -->
+  <h2>Summary</h2>
+  <div class="summary">
+    <div class="card">Attendance: <div><strong id="summaryAttendance">0</strong></div></div>
+    <div class="card">Wine Bottles: <div><strong id="summaryBottles">0</strong></div></div>
+    <div class="card">Wine Cost: <div><strong id="summaryWineCost">£0.00</strong></div></div>
+    <div class="card">Bottles per Person: <div><strong id="summaryBottlesPerPerson">0.00</strong></div></div>
+    <div class="card income">Gross Revenue: <div><strong id="summaryGrossRevenue">£0.00</strong></div></div>
+    <div class="card cost">Card Fees: <div><strong id="summaryCardFees">£0.00</strong></div></div>
+    <div class="card income">Net Revenue: <div><strong id="summaryNetRevenue">£0.00</strong></div></div>
+    <div class="card profit-positive">Best Case: <div><strong id="bestScenario">£0.00</strong></div></div>
+    <div class="card profit-negative">Worst Case: <div><strong id="worstScenario">£0.00</strong></div></div>
+    <div class="card">Approx. Spend per Head: <div><strong id="summarySpendPerHead">£0.00</strong></div></div>
+  </div>
+
+  <!-- Scenarios Table -->
+  <h2>Scenarios (Scroll Right)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Scenario</th><th>Attendance</th><th>Masonic %</th><th>Non-Masonic %</th><th>Prices</th>
+        <th>Ticket Revenue</th><th>Raffle</th><th>Fish Race</th><th>Bottle Comp</th>
+        <th>Gross Revenue</th><th>Card Fees</th><th>Net Revenue</th><th>Meals</th><th>Wine</th>
+        <th>Fixed Costs</th><th>Variable Costs</th><th>Gross Profit</th><th>Total Costs</th><th>Net Profit</th>
+      </tr>
+    </thead>
+    <tbody id="scenariosTableBody"></tbody>
+  </table>
 
   <script>
     const formatCurrency = v => (v<0?"(":"")+new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP'}).format(Math.abs(v||0))+(v<0?")":"");
@@ -107,34 +264,45 @@
 
     function updateAll(){
       const i=getInputs(), rP=5,fP=5,bP=1;
+      const att=i.attendance||0;
+
+      // Two-way binding between projected income and spend per head
+      const raffleAuto=document.getElementById('raffleAuto').checked;
+      const fishAuto=document.getElementById('fishRaceAuto').checked;
+      const bottleAuto=document.getElementById('bottleCompAuto').checked;
+
+      const rField=document.getElementById('rafflePerPerson');
+      const fField=document.getElementById('fishRacePerPerson');
+      const bField=document.getElementById('bottleCompPerPerson');
+
+      if(raffleAuto){ rField.value=(att?(i.raffleIncome/rP/att):0).toFixed(2); }
+      else { i.raffleIncome=(att*rP*(parseFloat(rField.value)||0)); document.getElementById('raffleIncome').value=i.raffleIncome.toFixed(2); }
+
+      if(fishAuto){ fField.value=(att?(i.fishRaceIncome/fP/att):0).toFixed(2); }
+      else { i.fishRaceIncome=(att*fP*(parseFloat(fField.value)||0)); document.getElementById('fishRaceIncome').value=i.fishRaceIncome.toFixed(2); }
+
+      if(bottleAuto){ bField.value=(att?(i.bottleCompIncome/bP/att):0).toFixed(2); }
+      else { i.bottleCompIncome=(att*bP*(parseFloat(bField.value)||0)); document.getElementById('bottleCompIncome').value=i.bottleCompIncome.toFixed(2); }
+
       // Bracket counts
       document.getElementById('raffleCount').textContent=`(${Math.round(i.raffleIncome/rP)} strips)`;
       document.getElementById('fishRaceCount').textContent=`(${Math.round(i.fishRaceIncome/fP)} tickets)`;
       document.getElementById('bottleCompCount').textContent=`(${Math.round(i.bottleCompIncome/bP)} goes)`;
 
-      const att=i.attendance||0;
-      // Auto-calculated Spend per Head values
-      if(document.getElementById('raffleAuto').checked)document.getElementById('rafflePerPerson').value=(att?(i.raffleIncome/rP/att):0).toFixed(2);
-      if(document.getElementById('fishRaceAuto').checked)document.getElementById('fishRacePerPerson').value=(att?(i.fishRaceIncome/fP/att):0).toFixed(2);
-      if(document.getElementById('bottleCompAuto').checked)document.getElementById('bottleCompPerPerson').value=(att?(i.bottleCompIncome/bP/att):0).toFixed(2);
-
-      const rPP=+document.getElementById('rafflePerPerson').value||0,
-            fPP=+document.getElementById('fishRacePerPerson').value||0,
-            bPP=+document.getElementById('bottleCompPerPerson').value||0;
-      document.getElementById('rafflePerPersonValue').textContent=formatCurrency(rPP*rP);
-      document.getElementById('fishRacePerPersonValue').textContent=formatCurrency(fPP*fP);
-      document.getElementById('bottleCompPerPersonValue').textContent=formatCurrency(bPP*bP);
-
+      const rPP=parseFloat(rField.value)||0, fPP=parseFloat(fField.value)||0, bPP=parseFloat(bField.value)||0;
+      document.getElementById('rafflePerPersonValue').textContent=`× £5 = ${formatCurrency(rPP*rP)}`;
+      document.getElementById('fishRacePerPersonValue').textContent=`× £5 = ${formatCurrency(fPP*fP)}`;
+      document.getElementById('bottleCompPerPersonValue').textContent=`× £1 = ${formatCurrency(bPP*bP)}`;
       const sph=(rPP*rP)+(fPP*fP)+(bPP*bP);
       document.getElementById('summarySpendPerHead').textContent=formatCurrency(sph);
 
       // Masonic display
       document.getElementById('masonicLabel').textContent=i.masonicPercent+"%";
-      const mG=Math.round(att*i.masonicPercent/100);
-      document.getElementById('masonicGuests').textContent=mG;
+      const mG=Math.round(att*i.masonicPercent/100);document.getElementById('masonicGuests').textContent=mG;
       document.getElementById('nonMasonicGuests').textContent=att-mG;
       document.getElementById('cardLabel').textContent=i.cardPercent+"%";
 
+      // Scenarios and summary
       const scens=[{n:'Group 1',p:{masonic:40,nonMasonic:35}},{n:'Group 2',p:{masonic:45,nonMasonic:40}}].map(s=>calcScenario(s.n,s.p,i));
       const tWine=i.wineBottles*i.winePerBottle;
       document.getElementById('summaryAttendance').textContent=att;
@@ -144,59 +312,23 @@
       document.getElementById('summaryGrossRevenue').textContent=formatCurrency(scens[0].gross);
       document.getElementById('summaryCardFees').textContent=formatCurrency(-scens[0].cardFees);
       document.getElementById('summaryNetRevenue').textContent=formatCurrency(scens[0].net);
-
       const p=scens.map(s=>s.nProfit);
       document.getElementById('bestScenario').textContent=formatProfit(Math.max(...p));
       document.getElementById('worstScenario').textContent=formatProfit(Math.min(...p));
-
       const tb=document.getElementById('scenariosTableBody');tb.innerHTML='';
       scens.forEach(s=>{
-        tb.insertAdjacentHTML('beforeend',
-          `<tr><td><b>${s.name}</b></td><td>${s.attendance}</td><td>${s.mP}%</td><td>${s.nmP}%</td>
-          <td><small>M:£${s.mPrc}<br>NM:£${s.nmPrc}</small></td>
-          <td class="income">${formatCurrency(s.ticketRev)}</td>
-          <td class="income">${formatCurrency(i.raffleIncome)}</td>
-          <td class="income">${formatCurrency(i.fishRaceIncome)}</td>
-          <td class="income">${formatCurrency(i.bottleCompIncome)}</td>
-          <td class="income">${formatCurrency(s.gross)}</td>
-          <td class="cost">(${formatCurrency(s.cardFees)})</td>
-          <td class="income">${formatCurrency(s.net)}</td>
-          <td class="cost">(${formatCurrency(s.meals)})</td>
-          <td class="cost">(${formatCurrency(s.wine)})</td>
-          <td class="cost">(${formatCurrency(s.fixed)})</td>
-          <td class="cost">(${formatCurrency(s.varC)})</td>
-          <td class="${getProfitClass(s.gProfit)}">${formatProfit(s.gProfit)}</td>
-          <td class="cost">(${formatCurrency(s.tCosts)})</td>
-          <td class="${getProfitClass(s.nProfit)}">${formatProfit(s.nProfit)}</td></tr>`
-        );
+        tb.insertAdjacentHTML('beforeend',`<tr><td><b>${s.name}</b></td><td>${s.attendance}</td><td>${s.mP}%</td><td>${s.nmP}%</td><td><small>M:£${s.mPrc}<br>NM:£${s.nmPrc}</small></td><td class="income">${formatCurrency(s.ticketRev)}</td><td class="income">${formatCurrency(i.raffleIncome)}</td><td class="income">${formatCurrency(i.fishRaceIncome)}</td><td class="income">${formatCurrency(i.bottleCompIncome)}</td><td class="income">${formatCurrency(s.gross)}</td><td class="cost">(${formatCurrency(s.cardFees)})</td><td class="income">${formatCurrency(s.net)}</td><td class="cost">(${formatCurrency(s.meals)})</td><td class="cost">(${formatCurrency(s.wine)})</td><td class="cost">(${formatCurrency(s.fixed)})</td><td class="cost">(${formatCurrency(s.varC)})</td><td class="${getProfitClass(s.gProfit)}">${formatProfit(s.gProfit)}</td><td class="cost">(${formatCurrency(s.tCosts)})</td><td class="${getProfitClass(s.nProfit)}">${formatProfit(s.nProfit)}</td></tr>`);
       });
-
-      // Scroll right
       const table=document.querySelector('table');
       if(table&&typeof table.scrollLeft!=='undefined')table.scrollLeft=table.scrollWidth;
     }
 
-    // Event wiring
-    const allInputs=[
-      'venueHire','comedian','attendanceInput','masonicPercent','wineBottlesInput',
-      'compMasonic','compNonMasonic','charityInput','raffleIncome','fishRaceIncome',
-      'bottleCompIncome','cardTransactions','rafflePerPerson','fishRacePerPerson','bottleCompPerPerson'
-    ];
+    const allInputs=['venueHire','comedian','attendanceInput','masonicPercent','wineBottlesInput','compMasonic','compNonMasonic','charityInput','raffleIncome','fishRaceIncome','bottleCompIncome','cardTransactions','rafflePerPerson','fishRacePerPerson','bottleCompPerPerson'];
     allInputs.forEach(id=>{
-      const el=document.getElementById(id);
-      if(el){el.addEventListener('input',updateAll);el.addEventListener('change',updateAll);}
+      const el=document.getElementById(id);if(el){el.addEventListener('input',updateAll);el.addEventListener('change',updateAll);}
     });
-    ['raffleAuto','fishRaceAuto','bottleCompAuto'].forEach(id=>{
-      document.getElementById(id).addEventListener('change',updateAll);
-    });
-
-    document.getElementById('resetAuto').addEventListener('click',()=>{
-      ['raffleAuto','fishRaceAuto','bottleCompAuto'].forEach(id=>{
-        document.getElementById(id).checked=true;
-      });
-      updateAll();
-    });
-
+    ['raffleAuto','fishRaceAuto','bottleCompAuto'].forEach(id=>document.getElementById(id).addEventListener('change',updateAll));
+    document.getElementById('resetAuto').addEventListener('click',()=>{['raffleAuto','fishRaceAuto','bottleCompAuto'].forEach(id=>document.getElementById(id).checked=true);updateAll();});
     updateAll();
   </script>
 </body>
