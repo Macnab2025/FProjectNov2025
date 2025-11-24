@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Macnab 2025 Financial Matrix</title>
+  <title>Macnab 2025 Financial Matrix — Updated</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f8; }
     h1, h2 { margin-bottom: 10px; }
@@ -44,31 +44,31 @@
     .profit-positive { color: green; font-weight: bold; }
     .profit-negative { color: red; font-weight: bold; }
 
-    table { 
-      width: 100%; 
-      border-collapse: collapse; 
-      margin-top: 20px; 
-      background: #fff; 
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fff;
       display: block;
       overflow-x: auto;
       white-space: nowrap;
     }
-    th, td { 
-      border: 1px solid #ccc; 
-      padding: 8px 10px; 
-      text-align: center; 
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 10px;
+      text-align: center;
     }
-    th { 
-      background: #dee2e6; 
-      position: sticky; 
-      top: 0; 
-      z-index: 1; 
+    th {
+      background: #dee2e6;
+      position: sticky;
+      top: 0;
+      z-index: 1;
     }
     td { vertical-align: top; }
     td small { display: block; font-size: 0.8em; color: #555; }
 
     th:nth-child(1), td:nth-child(1) { min-width: 100px; text-align: left; }
-    
+
     .calc-section {
       background: #f9f9f9;
       padding: 12px;
@@ -122,21 +122,19 @@
       cursor: pointer;
       font-size: 0.9em;
     }
-    button:hover {
-      background: #0052a3;
-    }
+    button:hover { background: #0052a3; }
   </style>
 </head>
 <body>
-  <h1>Macnab 2025 Financial Matrix</h1>
+  <h1>Macnab 2025 Financial Matrix — Updated</h1>
 
   <fieldset>
     <legend>Fixed Costs</legend>
     <div class="input-grid">
-      <label>Venue Hire (£):</label> 
+      <label>Venue Hire (£):</label>
       <input type="number" id="venueHire" value="300" min="0"><span></span>
 
-      <label>Comedian (£):</label> 
+      <label>Comedian (£):</label>
       <input type="number" id="comedian" value="350" min="0"><span></span>
     </div>
   </fieldset>
@@ -144,48 +142,45 @@
   <fieldset>
     <legend>Variable Costs</legend>
     <div class="input-grid">
-      <label>Base Attendance:</label> 
-      <input type="number" id="attendanceInput" value="127" min="0"><span></span>
+      <label>Base Attendance:</label>
+      <input type="number" id="attendanceInput" value="107" min="0"><span></span>
 
-      <label>Masonic %:</label> 
-      <input type="range" id="masonicPercent" value="80" min="0" max="100">
+      <label>Masonic %:</label>
+      <input type="range" id="masonicPercent" value="90" min="0" max="100">
       <span>
-        <span id="masonicLabel">80%</span> 
+        <span id="masonicLabel">90%</span>
         (<span id="masonicGuests">0</span> M, <span id="nonMasonicGuests">0</span> NM)
       </span>
 
-      <label>Wine Bottles (used):</label> 
-      <input type="number" id="wineBottlesInput" value="65" min="0"><span></span>
+      <label>Wine Bottles (used):</label>
+      <input type="number" id="wineBottlesInput" value="26" min="0"><span></span>
 
-      <label>Complimentary Masonic Tickets:</label> 
-      <input type="number" id="compMasonic" value="6" min="0"><span></span>
+      <label>Complimentary Tickets:</label>
+      <input type="number" id="compTickets" value="7" min="0"><span></span>
 
-      <label>Complimentary Non-Masonic Tickets:</label> 
-      <input type="number" id="compNonMasonic" value="4" min="0"><span></span>
-
-      <label>Charity Contribution (£):</label> 
-      <input type="number" id="charityInput" value="0" min="0"><span></span>
+      <label>Other Miscellaneous Costs (Organist, Tyler) (£):</label>
+      <input type="number" id="charityInput" value="85" min="0"><span></span>
     </div>
   </fieldset>
 
   <fieldset>
     <legend>Projected Income</legend>
     <div class="input-grid">
-      <label>Raffle Income (£): <small>£5 per ticket strip</small></label> 
-      <input type="number" id="raffleIncome" value="820" min="0">
+      <label>Raffle Income (£): <small>£5 per ticket strip</small></label>
+      <input type="number" id="raffleIncome" value="788" min="0">
       <span id="raffleCount" style="font-size: 0.9em;"></span>
 
-      <label>Fish Race Income (£): <small>£5 per ticket</small></label> 
-      <input type="number" id="fishRaceIncome" value="895" min="0">
+      <label>Fish Race Income (£): <small>£5 per ticket</small></label>
+      <input type="number" id="fishRaceIncome" value="585" min="0">
       <span id="fishCount" style="font-size: 0.9em;"></span>
 
-      <label>Bottle Comp Income (£): <small>£1 per go</small></label> 
-      <input type="number" id="bottleCompIncome" value="140" min="0">
+      <label>Bottle Comp Income (£): <small>£1 per go</small></label>
+      <input type="number" id="bottleCompIncome" value="169" min="0">
       <span id="bottleCount" style="font-size: 0.9em;"></span>
 
       <label>Card Transactions (%):</label>
-      <input type="range" id="cardTransactions" value="30" min="0" max="100">
-      <span id="cardLabel">30%</span>
+      <input type="range" id="cardTransactions" value="29" min="0" max="100">
+      <span id="cardLabel">29%</span>
     </div>
   </fieldset>
 
@@ -238,6 +233,7 @@
   </fieldset>
 
   <h2 style="margin-top: 40px;">Summary (Group 1 Only)</h2>
+  <button id="exportBtn">Export Results to Excel (CSV)</button>
   <div class="summary">
     <div class="card">Attendance: <span id="summaryAttendance"></span></div>
     <div class="card">Wine Bottles: <span id="summaryBottles"></span></div>
@@ -389,59 +385,66 @@
         masonicPercent: parseInt(document.getElementById('masonicPercent').value)||0,
         nonMasonicPercent: 100-(parseInt(document.getElementById('masonicPercent').value)||0),
         wineBottles: parseInt(document.getElementById('wineBottlesInput').value)||0,
-        compMasonic: parseInt(document.getElementById('compMasonic').value)||0,
-        compNonMasonic: parseInt(document.getElementById('compNonMasonic').value)||0,
+        compTickets: parseInt(document.getElementById('compTickets').value)||0,
         charityContribution: parseFloat(document.getElementById('charityInput').value)||0,
         raffleIncome: parseFloat(document.getElementById('raffleIncome').value)||0,
         fishRaceIncome: parseFloat(document.getElementById('fishRaceIncome').value)||0,
         bottleCompIncome: parseFloat(document.getElementById('bottleCompIncome').value)||0,
         cardPercent: parseInt(document.getElementById('cardTransactions').value)||0,
         mealCostPerGuest: 32,
-        winePerBottle: 19.5
+        winePerBottle: 19.5,
+        masonicPrice: 40,
+        nonMasonicPrice: 35
       };
     }
 
     function calculateScenario(groupName, prices, inputValues) {
       const attendance = inputValues.baseAttendance;
-      const masonicGuests = Math.round(attendance * inputValues.masonicPercent / 100);
-      const nonMasonicGuests = attendance - masonicGuests;
-      const paidMasonic = Math.max(masonicGuests - inputValues.compMasonic,0);
-      const paidNonMasonic = Math.max(nonMasonicGuests - inputValues.compNonMasonic,0);
+      // Paid attendees = total attendance - complimentary tickets
+      const paidAttendees = Math.max(attendance - inputValues.compTickets, 0);
 
-      // Revenue Calculations
-      const ticketRevenue = (paidMasonic * prices.masonic) + (paidNonMasonic * prices.nonMasonic);
+      // Distribute paid attendees by masonic % (complimentary do NOT affect the distribution)
+      const masonicPaid = Math.round(paidAttendees * inputValues.masonicPercent / 100);
+      const nonMasonicPaid = paidAttendees - masonicPaid;
+
+      // Revenue Calculations (from paid attendees only)
+      const ticketRevenue = (masonicPaid * prices.masonic) + (nonMasonicPaid * prices.nonMasonic);
       const sideIncome = inputValues.raffleIncome + inputValues.fishRaceIncome + inputValues.bottleCompIncome;
-      const grossRevenue = ticketRevenue + sideIncome;
+      const grossRevenue = ticketRevenue + sideIncome; // net of card fees — card fees now treated as a cost
 
       // Card Fee Calculations (1.5% + £0.20 per transaction)
-      const totalTickets = paidMasonic + paidNonMasonic;
+      const totalTickets = paidAttendees; // number of paid transactions
       const avgTicketPrice = totalTickets>0 ? ticketRevenue/totalTickets : 0;
       const cardFeePerTicket = (avgTicketPrice*0.015)+0.20;
       const totalCardFees = (totalTickets*(inputValues.cardPercent/100))*cardFeePerTicket;
-      const netRevenue = grossRevenue - totalCardFees;
 
       // Cost Calculations
+      // Meals cost applies to ALL attendees (including complimentary) because you pay for every meal
       const mealsCost = attendance * inputValues.mealCostPerGuest;
       const wineCost = inputValues.wineBottles * inputValues.winePerBottle;
       const fixedCosts = inputValues.venueHire + inputValues.comedian;
-      const variableCosts = mealsCost + wineCost + inputValues.charityContribution;
+      // Variable costs now include: meals, wine, other misc, AND card fees
+      const variableCosts = mealsCost + wineCost + inputValues.charityContribution + totalCardFees;
       const totalCosts = fixedCosts + variableCosts;
 
       // Profit Calculations
-      // Gross Profit = Net Revenue - Direct Variable Costs (Meals + Wine)
-      const grossProfit = netRevenue - mealsCost - wineCost;
-      // Net Profit = Net Revenue - All Costs (Fixed + Variable)
-      const netProfit = netRevenue - totalCosts;
+      // Gross Profit = Gross Revenue - Direct Variable Costs (Meals + Wine)  (keeps the same meaning)
+      const grossProfit = grossRevenue - mealsCost - wineCost;
+      // Net Profit = Gross Revenue - All Costs (Fixed + Variable + Card Fees already included in variableCosts)
+      const netProfit = grossRevenue - totalCosts;
 
       return {
         name: groupName,
         attendance,
+        paidAttendees,
+        compTickets: inputValues.compTickets,
         masonicPercent: inputValues.masonicPercent,
         nonMasonicPercent: inputValues.nonMasonicPercent,
         masonicPrice: prices.masonic,
         nonMasonicPrice: prices.nonMasonic,
-        ticketRevenue, sideIncome, grossRevenue, totalCardFees, netRevenue,
-        mealsCost, wineCost, fixedCosts, variableCosts, grossProfit, totalCosts, netProfit
+        ticketRevenue, sideIncome, grossRevenue, totalCardFees, netRevenue: grossRevenue - totalCardFees,
+        mealsCost, wineCost, fixedCosts, variableCosts, grossProfit, totalCosts, netProfit,
+        masonicPaid, nonMasonicPaid
       };
     }
 
@@ -449,35 +452,37 @@
       const inputValues = getInputValues();
       const attendance = inputValues.baseAttendance;
 
-      // Handle auto-calculation modes
+      // Handle auto-calculation modes — use PAID attendees for per-person averages
       const raffleAuto = document.getElementById('raffleAuto').checked;
       const fishAuto = document.getElementById('fishAuto').checked;
       const bottleAuto = document.getElementById('bottleAuto').checked;
 
-      if (raffleAuto && attendance > 0) {
-        const perPerson = inputValues.raffleIncome / 5 / attendance;
+      const paidAttendees = Math.max(attendance - inputValues.compTickets, 0);
+
+      if (raffleAuto && paidAttendees > 0) {
+        const perPerson = inputValues.raffleIncome / 5 / paidAttendees;
         document.getElementById('rafflePer').value = perPerson.toFixed(2);
       } else if (!raffleAuto) {
         const perPerson = parseFloat(document.getElementById('rafflePer').value) || 0;
-        inputValues.raffleIncome = perPerson * 5 * attendance;
+        inputValues.raffleIncome = perPerson * 5 * paidAttendees;
         document.getElementById('raffleIncome').value = inputValues.raffleIncome.toFixed(2);
       }
 
-      if (fishAuto && attendance > 0) {
-        const perPerson = inputValues.fishRaceIncome / 5 / attendance;
+      if (fishAuto && paidAttendees > 0) {
+        const perPerson = inputValues.fishRaceIncome / 5 / paidAttendees;
         document.getElementById('fishPer').value = perPerson.toFixed(2);
       } else if (!fishAuto) {
         const perPerson = parseFloat(document.getElementById('fishPer').value) || 0;
-        inputValues.fishRaceIncome = perPerson * 5 * attendance;
+        inputValues.fishRaceIncome = perPerson * 5 * paidAttendees;
         document.getElementById('fishRaceIncome').value = inputValues.fishRaceIncome.toFixed(2);
       }
 
-      if (bottleAuto && attendance > 0) {
-        const perPerson = inputValues.bottleCompIncome / 1 / attendance;
+      if (bottleAuto && paidAttendees > 0) {
+        const perPerson = inputValues.bottleCompIncome / 1 / paidAttendees;
         document.getElementById('bottlePer').value = perPerson.toFixed(2);
       } else if (!bottleAuto) {
         const perPerson = parseFloat(document.getElementById('bottlePer').value) || 0;
-        inputValues.bottleCompIncome = perPerson * 1 * attendance;
+        inputValues.bottleCompIncome = perPerson * 1 * paidAttendees;
         document.getElementById('bottleCompIncome').value = inputValues.bottleCompIncome.toFixed(2);
       }
 
@@ -499,10 +504,10 @@
       document.getElementById('fishCount').textContent = `(${fishTickets} tickets)`;
       document.getElementById('bottleCount').textContent = `(${bottleGoes} goes)`;
 
-      // Update Masonic % display with split
+      // Update Masonic % display with split — show split for PAID attendees only
       document.getElementById('masonicLabel').textContent = inputValues.masonicPercent + '%';
-      const masonicGuests = Math.round(inputValues.baseAttendance * inputValues.masonicPercent / 100);
-      const nonMasonicGuests = inputValues.baseAttendance - masonicGuests;
+      const masonicGuests = Math.round(Math.max(attendance - inputValues.compTickets,0) * inputValues.masonicPercent / 100);
+      const nonMasonicGuests = Math.max(attendance - inputValues.compTickets,0) - masonicGuests;
       document.getElementById('masonicGuests').textContent = masonicGuests;
       document.getElementById('nonMasonicGuests').textContent = nonMasonicGuests;
 
@@ -522,7 +527,7 @@
 
       const grossRevenue = group1Scenario.grossRevenue;
       const cardFees = group1Scenario.totalCardFees;
-      const netRevenue = group1Scenario.netRevenue;
+      const netRevenue = group1Scenario.netRevenue; // netRevenue already defined in scenario
       document.getElementById('summaryGrossRevenue').textContent = formatCurrency(grossRevenue);
       document.getElementById('summaryCardFees').textContent = formatCurrency(-cardFees);
       document.getElementById('summaryNetRevenue').textContent = formatCurrency(netRevenue);
@@ -537,19 +542,19 @@
       netProfitEl.parentElement.className = 'card ' + getProfitClass(netProfitValue);
 
       // Update buyers calculator
-      const raffleBest = findBestDivisor(raffleStrips, attendance);
+      const raffleBest = findBestDivisor(raffleStrips, Math.max(attendance - inputValues.compTickets,0));
       document.getElementById('calcRTotal').innerHTML = raffleBest && raffleBest.adjusted
         ? `${raffleStrips} <span style="color: #d32f2f;">(prime)</span> → ${raffleBest.newTotal}`
         : raffleStrips;
       
-      const fishBest = findBestDivisor(fishTickets, attendance);
+      const fishBest = findBestDivisor(fishTickets, Math.max(attendance - inputValues.compTickets,0));
       document.getElementById('calcFTotal').innerHTML = fishBest && fishBest.adjusted
         ? `${fishTickets} <span style="color: #d32f2f;">(prime)</span> → ${fishBest.newTotal}`
         : fishTickets;
       
       document.getElementById('calcBTotal').textContent = bottleGoes;
       const bottleSets = Math.floor(bottleGoes / 5);
-      const bottleBestCalc = findBestDivisor(bottleSets, attendance);
+      const bottleBestCalc = findBestDivisor(bottleSets, Math.max(attendance - inputValues.compTickets,0));
       document.getElementById('calcBSets').innerHTML = bottleBestCalc && bottleBestCalc.adjusted
         ? `${bottleSets} <span style="color: #d32f2f;">(prime)</span> → ${bottleBestCalc.newTotal}`
         : bottleSets;
@@ -596,14 +601,14 @@
 
       // Update divisor tables
       document.getElementById('raffleTable').innerHTML = raffleBest && raffleBest.adjusted 
-        ? buildDivisorTable(raffleBest.newTotal, attendance)
-        : buildDivisorTable(raffleStrips, attendance);
+        ? buildDivisorTable(raffleBest.newTotal, Math.max(attendance - inputValues.compTickets,0))
+        : buildDivisorTable(raffleStrips, Math.max(attendance - inputValues.compTickets,0));
       document.getElementById('fishTable').innerHTML = fishBest && fishBest.adjusted
-        ? buildDivisorTable(fishBest.newTotal, attendance, 5)
-        : buildDivisorTable(fishTickets, attendance, 5);
+        ? buildDivisorTable(fishBest.newTotal, Math.max(attendance - inputValues.compTickets,0), 5)
+        : buildDivisorTable(fishTickets, Math.max(attendance - inputValues.compTickets,0), 5);
       document.getElementById('bottleTable').innerHTML = bottleBestCalc && bottleBestCalc.adjusted
-        ? buildDivisorTable(bottleBestCalc.newTotal, attendance)
-        : buildDivisorTable(bottleSets, attendance);
+        ? buildDivisorTable(bottleBestCalc.newTotal, Math.max(attendance - inputValues.compTickets,0))
+        : buildDivisorTable(bottleSets, Math.max(attendance - inputValues.compTickets,0));
 
       // Update scenario table (Group 1 only)
       const tableBody = document.getElementById('scenariosTableBody');
@@ -611,10 +616,10 @@
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><strong>Group 1</strong></td>
-        <td>${group1Scenario.attendance}</td>
+        <td>${group1Scenario.attendance} (Paid: ${group1Scenario.paidAttendees}, Comp: ${group1Scenario.compTickets})</td>
         <td>${group1Scenario.masonicPercent}%</td>
         <td>${group1Scenario.nonMasonicPercent}%</td>
-        <td><small>M: £${group1Scenario.masonicPrice}<br>NM: £${group1Scenario.nonMasonicPrice}</small></td>
+        <td><small>M: £40<br>NM: £35</small></td>
         <td class="income">${formatCurrency(group1Scenario.ticketRevenue)}</td>
         <td class="income">${formatCurrency(inputValues.raffleIncome)}</td>
         <td class="income">${formatCurrency(inputValues.fishRaceIncome)}</td>
@@ -652,6 +657,46 @@
       document.getElementById('fishAuto').checked = true;
       document.getElementById('bottleAuto').checked = true;
       updateCalculations();
+    });
+
+    // Export to CSV
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const inputs = getInputValues();
+      const rows = [
+        ['Field','Value'],
+        ['Venue Hire', inputs.venueHire],
+        ['Comedian', inputs.comedian],
+        ['Attendance', inputs.baseAttendance],
+        ['Complimentary Tickets', inputs.compTickets],
+        ['Masonic %', inputs.masonicPercent],
+        ['Non-Masonic %', inputs.nonMasonicPercent],
+        ['Wine Bottles', inputs.wineBottles],
+        ['Misc Costs', inputs.charityContribution],
+        ['Raffle Income', inputs.raffleIncome],
+        ['Fish Race Income', inputs.fishRaceIncome],
+        ['Bottle Comp Income', inputs.bottleCompIncome],
+        ['Card %', inputs.cardPercent]
+      ];
+
+      const scenario = calculateScenario('Group 1',{masonic:40,nonMasonic:35},inputs);
+      rows.push(['---Scenario Results---','']);
+      rows.push(['Ticket Revenue', scenario.ticketRevenue]);
+      rows.push(['Gross Revenue', scenario.grossRevenue]);
+      rows.push(['Card Fees', scenario.totalCardFees]);
+      rows.push(['Net Revenue', scenario.netRevenue]);
+      rows.push(['Meals Cost', scenario.mealsCost]);
+      rows.push(['Wine Cost', scenario.wineCost]);
+      rows.push(['Fixed Costs', scenario.fixedCosts]);
+      rows.push(['Variable Costs', scenario.variableCosts]);
+      rows.push(['Total Costs', scenario.totalCosts]);
+      rows.push(['Net Profit', scenario.netProfit]);
+
+      let csv = rows.map(r => r.join(',')).join('\n');
+      const blob = new Blob([csv],{type:'text/csv'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'Macnab_Results.csv';
+      a.click();
     });
 
     updateCalculations();
